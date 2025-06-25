@@ -58,7 +58,7 @@ def main():
         }
 
         with open("data/audited_videos.json", "a") as f:
-           json.dump(j, f)
+           json.dump(j, f, indent=4)
            f.write("\n")
 
 

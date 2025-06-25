@@ -1,5 +1,25 @@
-{"type": "youtube", "url": "https://www.youtube.com/watch?v=ZGL_LWMt-SI", "has_captions": true}
-{"type": "youtube", "url": "https://www.youtube.com/watch?v=vA8kgwqBCAI", "has_captions": true}
-{"type": "youtube", "url": "https://www.youtube.com/watch?v=T65xmEN2gLo", "has_captions": true}
-{"type": "youtube", "url": "https://youtu.be/ZTnE5e9nXoQ", "has_captions": false}
-{"type": "youtube", "url": "https://youtu.be/PBSdY_ubS2I", "has_captions": false}
+{
+    "type": "youtube",
+    "url": "https://www.youtube.com/watch?v=ZGL_LWMt-SI",
+    "has_captions": true
+}
+{
+    "type": "youtube",
+    "url": "https://www.youtube.com/watch?v=vA8kgwqBCAI",
+    "has_captions": true
+}
+{
+    "type": "youtube",
+    "url": "https://www.youtube.com/watch?v=T65xmEN2gLo",
+    "has_captions": true
+}
+{
+    "type": "youtube",
+    "url": "https://youtu.be/ZTnE5e9nXoQ",
+    "has_captions": false
+}
+{
+    "type": "youtube",
+    "url": "https://youtu.be/PBSdY_ubS2I",
+    "has_captions": false
+}
