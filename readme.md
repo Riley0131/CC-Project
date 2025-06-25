@@ -2,6 +2,9 @@
 Riley O'Shea
 University of Colorado Colorado Springs
 
+# Canvas API
+Open the config/canvasAPI file and make sure you add your api token otherwise the program will not work.
+
 ## Structure
 ### Pull Modules
 This file pulls the modules from each enrolled course for the student and seperates the urls by type (youtube video, embedded Canvas video, other)  
