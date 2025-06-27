@@ -1,0 +1,777 @@
+[
+    {
+        "id": 97767,
+        "name": "Academic Advising-College of Engineering",
+        "account_id": 30,
+        "uuid": "qlUhZ6Fgu1zv2Ymm8BrLF1g5fT1twbElK1uYwXM7",
+        "start_at": "2020-08-24T11:24:31Z",
+        "grading_standard_id": null,
+        "is_public": false,
+        "created_at": "2020-07-31T15:01:47Z",
+        "course_code": "Academic Advising-College of Engineering",
+        "default_view": "wiki",
+        "root_account_id": 1,
+        "enrollment_term_id": 6,
+        "license": "private",
+        "grade_passback_setting": null,
+        "end_at": null,
+        "public_syllabus": false,
+        "public_syllabus_to_auth": false,
+        "storage_quota_mb": 1048,
+        "is_public_to_auth_users": false,
+        "homeroom_course": false,
+        "course_color": null,
+        "friendly_name": null,
+        "apply_assignment_group_weights": false,
+        "calendar": {
+            "ics": "https://canvas.uccs.edu/feeds/calendars/course_qlUhZ6Fgu1zv2Ymm8BrLF1g5fT1twbElK1uYwXM7.ics"
+        },
+        "time_zone": "America/Denver",
+        "blueprint": false,
+        "template": false,
+        "enrollments": [
+            {
+                "type": "student",
+                "role": "StudentEnrollment",
+                "role_id": 3,
+                "user_id": 131197,
+                "enrollment_state": "active",
+                "limit_privileges_to_course_section": false
+            }
+        ],
+        "hide_final_grades": false,
+        "workflow_state": "available",
+        "restrict_enrollments_to_course_dates": false
+    },
+    {
+        "id": 146517,
+        "name": "Adv Prof & Technical Writing - 2023Fa TCID 3080 OL1",
+        "account_id": 580,
+        "uuid": "kkrWKoKw22pPXmEV1hkrLzyUvNfOvnUrAJujX9HN",
+        "start_at": "2023-08-21T06:00:00Z",
+        "grading_standard_id": null,
+        "is_public": false,
+        "created_at": "2023-03-02T07:21:34Z",
+        "course_code": "2023Fa TCID 3080 OL1 OL2 OL4 --",
+        "default_view": "syllabus",
+        "root_account_id": 1,
+        "enrollment_term_id": 200,
+        "license": "private",
+        "grade_passback_setting": null,
+        "end_at": "2023-12-15T07:00:00Z",
+        "public_syllabus": false,
+        "public_syllabus_to_auth": false,
+        "storage_quota_mb": 1048,
+        "is_public_to_auth_users": false,
+        "homeroom_course": false,
+        "course_color": null,
+        "friendly_name": null,
+        "apply_assignment_group_weights": false,
+        "calendar": {
+            "ics": "https://canvas.uccs.edu/feeds/calendars/course_kkrWKoKw22pPXmEV1hkrLzyUvNfOvnUrAJujX9HN.ics"
+        },
+        "time_zone": "America/Denver",
+        "blueprint": false,
+        "template": false,
+        "enrollments": [
+            {
+                "type": "student",
+                "role": "StudentEnrollment",
+                "role_id": 3,
+                "user_id": 131197,
+                "enrollment_state": "active",
+                "limit_privileges_to_course_section": false
+            }
+        ],
+        "hide_final_grades": false,
+        "workflow_state": "available",
+        "restrict_enrollments_to_course_dates": true
+    },
+    {
+        "id": 134251,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 121039,
+        "name": "BACJ Students Hub",
+        "account_id": 75,
+        "uuid": "pEWVpsghlqkE1SqGNYoVtyfVpGMTvHDCrF5BWi07",
+        "start_at": "2021-01-26T19:58:26Z",
+        "grading_standard_id": null,
+        "is_public": false,
+        "created_at": "2021-01-19T22:46:57Z",
+        "course_code": "BACJ Students Hub",
+        "default_view": "wiki",
+        "root_account_id": 1,
+        "enrollment_term_id": 6,
+        "license": "private",
+        "grade_passback_setting": null,
+        "end_at": null,
+        "public_syllabus": false,
+        "public_syllabus_to_auth": false,
+        "storage_quota_mb": 1048,
+        "is_public_to_auth_users": false,
+        "homeroom_course": false,
+        "course_color": null,
+        "friendly_name": null,
+        "apply_assignment_group_weights": false,
+        "calendar": {
+            "ics": "https://canvas.uccs.edu/feeds/calendars/course_pEWVpsghlqkE1SqGNYoVtyfVpGMTvHDCrF5BWi07.ics"
+        },
+        "time_zone": "America/Denver",
+        "blueprint": false,
+        "template": false,
+        "enrollments": [
+            {
+                "type": "student",
+                "role": "StudentEnrollment",
+                "role_id": 3,
+                "user_id": 131197,
+                "enrollment_state": "active",
+                "limit_privileges_to_course_section": false
+            }
+        ],
+        "hide_final_grades": false,
+        "workflow_state": "available",
+        "restrict_enrollments_to_course_dates": false
+    },
+    {
+        "id": 134082,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 140149,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 28403,
+        "name": "Club Sports Officer Resources",
+        "account_id": 30,
+        "uuid": "a8wBFcLsW1imfR6p4PwQOP95bsbtNOpQh6XCr7Ud",
+        "start_at": "2018-08-14T16:52:04Z",
+        "grading_standard_id": null,
+        "is_public": false,
+        "created_at": "2018-08-09T16:27:10Z",
+        "course_code": "Club Sports Officer Resources",
+        "default_view": "syllabus",
+        "root_account_id": 1,
+        "enrollment_term_id": 6,
+        "license": "private",
+        "grade_passback_setting": null,
+        "end_at": null,
+        "public_syllabus": false,
+        "public_syllabus_to_auth": false,
+        "storage_quota_mb": 1048,
+        "is_public_to_auth_users": false,
+        "homeroom_course": false,
+        "course_color": null,
+        "friendly_name": null,
+        "apply_assignment_group_weights": false,
+        "calendar": {
+            "ics": "https://canvas.uccs.edu/feeds/calendars/course_a8wBFcLsW1imfR6p4PwQOP95bsbtNOpQh6XCr7Ud.ics"
+        },
+        "time_zone": "America/Denver",
+        "blueprint": false,
+        "template": false,
+        "enrollments": [
+            {
+                "type": "student",
+                "role": "StudentEnrollment",
+                "role_id": 3,
+                "user_id": 131197,
+                "enrollment_state": "active",
+                "limit_privileges_to_course_section": false
+            }
+        ],
+        "hide_final_grades": false,
+        "workflow_state": "available",
+        "restrict_enrollments_to_course_dates": false
+    },
+    {
+        "id": 157603,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 146774,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 163028,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 158530,
+        "name": "Computer Networks - 2024Fa CS 4220 001",
+        "account_id": 175,
+        "uuid": "D1jYU0KqAgaCJu03NmlO1hEnmKRv7Zg23MvX0huB",
+        "start_at": null,
+        "grading_standard_id": null,
+        "is_public": false,
+        "created_at": "2024-03-19T17:22:35Z",
+        "course_code": "2024Fa CS 4220 001 003 --",
+        "default_view": "syllabus",
+        "root_account_id": 1,
+        "enrollment_term_id": 303,
+        "license": "private",
+        "grade_passback_setting": null,
+        "end_at": null,
+        "public_syllabus": false,
+        "public_syllabus_to_auth": false,
+        "storage_quota_mb": 1048,
+        "is_public_to_auth_users": false,
+        "homeroom_course": false,
+        "course_color": null,
+        "friendly_name": null,
+        "apply_assignment_group_weights": true,
+        "calendar": {
+            "ics": "https://canvas.uccs.edu/feeds/calendars/course_D1jYU0KqAgaCJu03NmlO1hEnmKRv7Zg23MvX0huB.ics"
+        },
+        "time_zone": "America/Denver",
+        "blueprint": false,
+        "template": false,
+        "enrollments": [
+            {
+                "type": "student",
+                "role": "StudentEnrollment",
+                "role_id": 3,
+                "user_id": 131197,
+                "enrollment_state": "active",
+                "limit_privileges_to_course_section": false
+            }
+        ],
+        "hide_final_grades": false,
+        "workflow_state": "available",
+        "restrict_enrollments_to_course_dates": false
+    },
+    {
+        "id": 162850,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 165395,
+        "name": "Cont lss Soc/Pub Policy - 2025Su CRJU 3268 OL1",
+        "account_id": 701,
+        "uuid": "81dbT0qjvcN8E7G5sBExDWzQo9myq0EqPeZou23i",
+        "start_at": null,
+        "grading_standard_id": null,
+        "is_public": false,
+        "created_at": "2025-01-01T07:21:09Z",
+        "course_code": "2025Su CRJU 3268 OL1",
+        "default_view": "syllabus",
+        "root_account_id": 1,
+        "enrollment_term_id": 305,
+        "license": "private",
+        "grade_passback_setting": null,
+        "end_at": null,
+        "public_syllabus": false,
+        "public_syllabus_to_auth": false,
+        "storage_quota_mb": 1048,
+        "is_public_to_auth_users": false,
+        "homeroom_course": false,
+        "course_color": null,
+        "friendly_name": null,
+        "apply_assignment_group_weights": false,
+        "calendar": {
+            "ics": "https://canvas.uccs.edu/feeds/calendars/course_81dbT0qjvcN8E7G5sBExDWzQo9myq0EqPeZou23i.ics"
+        },
+        "time_zone": "America/Denver",
+        "blueprint": false,
+        "template": false,
+        "enrollments": [
+            {
+                "type": "student",
+                "role": "StudentEnrollment",
+                "role_id": 3,
+                "user_id": 131197,
+                "enrollment_state": "active",
+                "limit_privileges_to_course_section": false
+            }
+        ],
+        "hide_final_grades": false,
+        "workflow_state": "available",
+        "restrict_enrollments_to_course_dates": false
+    },
+    {
+        "id": 158578,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 139646,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 134471,
+        "name": "CS",
+        "account_id": 392,
+        "uuid": "JpVtgoGEYcL91tORL9G0zBz3Wf4jJjM0rvLtSsZP",
+        "start_at": null,
+        "grading_standard_id": 2141,
+        "is_public": false,
+        "created_at": "2022-03-02T07:23:58Z",
+        "course_code": "2022Fa CS 1120 002 003 --",
+        "default_view": "syllabus",
+        "root_account_id": 1,
+        "enrollment_term_id": 197,
+        "license": "private",
+        "grade_passback_setting": null,
+        "end_at": null,
+        "public_syllabus": false,
+        "public_syllabus_to_auth": false,
+        "storage_quota_mb": 1048,
+        "is_public_to_auth_users": false,
+        "homeroom_course": false,
+        "course_color": null,
+        "friendly_name": null,
+        "apply_assignment_group_weights": true,
+        "calendar": {
+            "ics": "https://canvas.uccs.edu/feeds/calendars/course_JpVtgoGEYcL91tORL9G0zBz3Wf4jJjM0rvLtSsZP.ics"
+        },
+        "time_zone": "America/Denver",
+        "original_name": "Comp Thinking w/ Begin Prog - 2022Fa CS 1120 002/003",
+        "blueprint": false,
+        "template": false,
+        "enrollments": [
+            {
+                "type": "student",
+                "role": "StudentEnrollment",
+                "role_id": 3,
+                "user_id": 131197,
+                "enrollment_state": "active",
+                "limit_privileges_to_course_section": false
+            }
+        ],
+        "hide_final_grades": false,
+        "workflow_state": "available",
+        "restrict_enrollments_to_course_dates": true
+    },
+    {
+        "id": 145707,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 146137,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 151732,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 32944,
+        "name": "Dining and Hospitality Services",
+        "account_id": 30,
+        "uuid": "5zwraNsWLB3dPklYCJ82Pba9oV3sLrLkAoFtozih",
+        "start_at": "2021-11-02T16:19:51Z",
+        "grading_standard_id": null,
+        "is_public": false,
+        "created_at": "2019-01-10T13:13:21Z",
+        "course_code": "Dining and Hospitality Services",
+        "default_view": "syllabus",
+        "root_account_id": 1,
+        "enrollment_term_id": 6,
+        "license": "private",
+        "grade_passback_setting": null,
+        "end_at": null,
+        "public_syllabus": false,
+        "public_syllabus_to_auth": true,
+        "storage_quota_mb": 1048,
+        "is_public_to_auth_users": false,
+        "homeroom_course": false,
+        "course_color": null,
+        "friendly_name": null,
+        "apply_assignment_group_weights": false,
+        "calendar": {
+            "ics": "https://canvas.uccs.edu/feeds/calendars/course_5zwraNsWLB3dPklYCJ82Pba9oV3sLrLkAoFtozih.ics"
+        },
+        "time_zone": "America/Denver",
+        "blueprint": false,
+        "template": false,
+        "enrollments": [
+            {
+                "type": "student",
+                "role": "StudentEnrollment",
+                "role_id": 3,
+                "user_id": 131197,
+                "enrollment_state": "active",
+                "limit_privileges_to_course_section": false
+            }
+        ],
+        "hide_final_grades": false,
+        "workflow_state": "available",
+        "restrict_enrollments_to_course_dates": false,
+        "overridden_course_visibility": ""
+    },
+    {
+        "id": 165356,
+        "name": "Disability Services Sandbox",
+        "account_id": 30,
+        "uuid": "5zGXADAYRDvfYh5TD5xGoQl5UzSJqTsGCclWOYJB",
+        "start_at": null,
+        "grading_standard_id": null,
+        "is_public": false,
+        "created_at": "2024-12-19T20:35:54Z",
+        "course_code": "DS Sandbox",
+        "default_view": "syllabus",
+        "root_account_id": 1,
+        "enrollment_term_id": 6,
+        "license": "private",
+        "grade_passback_setting": null,
+        "end_at": null,
+        "public_syllabus": false,
+        "public_syllabus_to_auth": false,
+        "storage_quota_mb": 1048,
+        "is_public_to_auth_users": false,
+        "homeroom_course": false,
+        "course_color": null,
+        "friendly_name": null,
+        "apply_assignment_group_weights": false,
+        "calendar": {
+            "ics": "https://canvas.uccs.edu/feeds/calendars/course_5zGXADAYRDvfYh5TD5xGoQl5UzSJqTsGCclWOYJB.ics"
+        },
+        "time_zone": "America/Denver",
+        "blueprint": false,
+        "template": false,
+        "enrollments": [
+            {
+                "type": "teacher",
+                "role": "Course_Builder",
+                "role_id": 57,
+                "user_id": 131197,
+                "enrollment_state": "active",
+                "limit_privileges_to_course_section": false
+            }
+        ],
+        "hide_final_grades": false,
+        "workflow_state": "available",
+        "restrict_enrollments_to_course_dates": false
+    },
+    {
+        "id": 152028,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 28176,
+        "name": "DS - Exam Accessibility",
+        "account_id": 30,
+        "uuid": "iUiaG8AvIejTRlWkDhKoiXPy5YSspApWG7vyGlCF",
+        "start_at": "2021-02-26T07:00:00Z",
+        "grading_standard_id": null,
+        "is_public": false,
+        "created_at": "2018-07-12T08:15:31Z",
+        "course_code": "DS - Exam Accessibility",
+        "default_view": "syllabus",
+        "root_account_id": 1,
+        "enrollment_term_id": 6,
+        "license": "private",
+        "grade_passback_setting": null,
+        "end_at": null,
+        "public_syllabus": false,
+        "public_syllabus_to_auth": false,
+        "storage_quota_mb": 1048,
+        "is_public_to_auth_users": false,
+        "homeroom_course": false,
+        "course_color": null,
+        "friendly_name": null,
+        "apply_assignment_group_weights": false,
+        "locale": "en",
+        "calendar": {
+            "ics": "https://canvas.uccs.edu/feeds/calendars/course_iUiaG8AvIejTRlWkDhKoiXPy5YSspApWG7vyGlCF.ics"
+        },
+        "time_zone": "America/Denver",
+        "blueprint": false,
+        "template": false,
+        "enrollments": [
+            {
+                "type": "student",
+                "role": "StudentEnrollment",
+                "role_id": 3,
+                "user_id": 131197,
+                "enrollment_state": "active",
+                "limit_privileges_to_course_section": false
+            }
+        ],
+        "hide_final_grades": false,
+        "workflow_state": "available",
+        "restrict_enrollments_to_course_dates": false
+    },
+    {
+        "id": 160908,
+        "name": "Engineering and Applied Science Career Office",
+        "account_id": 30,
+        "uuid": "Vf7N35R91vfMNZ5xbhRjlJX6ElgewYSmqf3LEkcE",
+        "start_at": null,
+        "grading_standard_id": null,
+        "is_public": false,
+        "created_at": "2024-06-17T17:13:30Z",
+        "course_code": "Engineering and Applied Science Career Office",
+        "default_view": "wiki",
+        "root_account_id": 1,
+        "enrollment_term_id": 6,
+        "license": "private",
+        "grade_passback_setting": null,
+        "end_at": null,
+        "public_syllabus": false,
+        "public_syllabus_to_auth": true,
+        "storage_quota_mb": 1048,
+        "is_public_to_auth_users": true,
+        "homeroom_course": false,
+        "course_color": null,
+        "friendly_name": null,
+        "apply_assignment_group_weights": false,
+        "calendar": {
+            "ics": "https://canvas.uccs.edu/feeds/calendars/course_Vf7N35R91vfMNZ5xbhRjlJX6ElgewYSmqf3LEkcE.ics"
+        },
+        "time_zone": "America/Denver",
+        "blueprint": false,
+        "template": false,
+        "enrollments": [
+            {
+                "type": "student",
+                "role": "StudentEnrollment",
+                "role_id": 3,
+                "user_id": 131197,
+                "enrollment_state": "active",
+                "limit_privileges_to_course_section": false
+            }
+        ],
+        "hide_final_grades": false,
+        "workflow_state": "available",
+        "restrict_enrollments_to_course_dates": false
+    },
+    {
+        "id": 134677,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 134222,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 139207,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 165123,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 165433,
+        "name": "Intro to Entrepreneurship - 2025Su INOV 1000 OL1",
+        "account_id": 111,
+        "uuid": "kWdm1y9a6agTszxLpTXTncyrD2Q9p1qHLI6ImnQP",
+        "start_at": null,
+        "grading_standard_id": null,
+        "is_public": false,
+        "created_at": "2025-01-01T07:21:10Z",
+        "course_code": "2025Su INOV 1000 OL1",
+        "default_view": "syllabus",
+        "root_account_id": 1,
+        "enrollment_term_id": 305,
+        "license": "private",
+        "grade_passback_setting": null,
+        "end_at": null,
+        "public_syllabus": false,
+        "public_syllabus_to_auth": false,
+        "storage_quota_mb": 1048,
+        "is_public_to_auth_users": false,
+        "homeroom_course": false,
+        "course_color": null,
+        "friendly_name": null,
+        "apply_assignment_group_weights": false,
+        "calendar": {
+            "ics": "https://canvas.uccs.edu/feeds/calendars/course_kWdm1y9a6agTszxLpTXTncyrD2Q9p1qHLI6ImnQP.ics"
+        },
+        "time_zone": "America/Denver",
+        "blueprint": false,
+        "template": false,
+        "enrollments": [
+            {
+                "type": "student",
+                "role": "StudentEnrollment",
+                "role_id": 3,
+                "user_id": 131197,
+                "enrollment_state": "active",
+                "limit_privileges_to_course_section": false
+            }
+        ],
+        "hide_final_grades": false,
+        "workflow_state": "available",
+        "restrict_enrollments_to_course_dates": false
+    },
+    {
+        "id": 151778,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 160597,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 145477,
+        "name": "Introduction to Business - 2023Fa BUAD 1000 H02",
+        "account_id": 317,
+        "uuid": "iYQiTNDaRWhKyAmG4RRLhwTiljDi0utrLVpi57eK",
+        "start_at": null,
+        "grading_standard_id": 8,
+        "is_public": false,
+        "created_at": "2023-03-02T07:20:55Z",
+        "course_code": "2023Fa BUAD 1000 H02",
+        "default_view": "feed",
+        "root_account_id": 1,
+        "enrollment_term_id": 200,
+        "license": "private",
+        "grade_passback_setting": null,
+        "end_at": null,
+        "public_syllabus": false,
+        "public_syllabus_to_auth": false,
+        "storage_quota_mb": 1048,
+        "is_public_to_auth_users": false,
+        "homeroom_course": false,
+        "course_color": null,
+        "friendly_name": null,
+        "apply_assignment_group_weights": false,
+        "calendar": {
+            "ics": "https://canvas.uccs.edu/feeds/calendars/course_iYQiTNDaRWhKyAmG4RRLhwTiljDi0utrLVpi57eK.ics"
+        },
+        "time_zone": "America/Denver",
+        "blueprint": false,
+        "template": false,
+        "enrollments": [
+            {
+                "type": "student",
+                "role": "StudentEnrollment",
+                "role_id": 3,
+                "user_id": 131197,
+                "enrollment_state": "active",
+                "limit_privileges_to_course_section": false
+            }
+        ],
+        "hide_final_grades": false,
+        "workflow_state": "available",
+        "restrict_enrollments_to_course_dates": true
+    },
+    {
+        "id": 155475,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 143739,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 165127,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 151925,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 151943,
+        "name": "Programming with UNIX - 2024Sp CS 2080 003",
+        "account_id": 392,
+        "uuid": "gtabTaAN404gQ0mrtaV1YjIsFOPAc8I3UA6lZS1J",
+        "start_at": null,
+        "grading_standard_id": 3267,
+        "is_public": false,
+        "created_at": "2023-09-20T15:22:00Z",
+        "course_code": "2024Sp CS 2080 003",
+        "default_view": "syllabus",
+        "root_account_id": 1,
+        "enrollment_term_id": 201,
+        "license": "private",
+        "grade_passback_setting": null,
+        "end_at": null,
+        "public_syllabus": false,
+        "public_syllabus_to_auth": false,
+        "storage_quota_mb": 1048,
+        "is_public_to_auth_users": false,
+        "homeroom_course": false,
+        "course_color": null,
+        "friendly_name": null,
+        "apply_assignment_group_weights": true,
+        "calendar": {
+            "ics": "https://canvas.uccs.edu/feeds/calendars/course_gtabTaAN404gQ0mrtaV1YjIsFOPAc8I3UA6lZS1J.ics"
+        },
+        "time_zone": "America/Denver",
+        "blueprint": false,
+        "template": false,
+        "enrollments": [
+            {
+                "type": "student",
+                "role": "StudentEnrollment",
+                "role_id": 3,
+                "user_id": 131197,
+                "enrollment_state": "active",
+                "limit_privileges_to_course_section": false
+            }
+        ],
+        "hide_final_grades": false,
+        "workflow_state": "available",
+        "restrict_enrollments_to_course_dates": true
+    },
+    {
+        "id": 155710,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 157956,
+        "name": "Secure Mobile Cloud Cpting - 2024Fa CS 2910 001",
+        "account_id": 175,
+        "uuid": "o45SBtiD31lSAIR224GGzpCbYhkA8a4R3rVk5k6R",
+        "start_at": null,
+        "grading_standard_id": null,
+        "is_public": false,
+        "created_at": "2024-03-19T17:21:57Z",
+        "course_code": "2024Fa CS 2910 001",
+        "default_view": "syllabus",
+        "root_account_id": 1,
+        "enrollment_term_id": 303,
+        "license": "private",
+        "grade_passback_setting": null,
+        "end_at": null,
+        "public_syllabus": false,
+        "public_syllabus_to_auth": false,
+        "storage_quota_mb": 1048,
+        "is_public_to_auth_users": false,
+        "homeroom_course": false,
+        "course_color": null,
+        "friendly_name": null,
+        "apply_assignment_group_weights": true,
+        "calendar": {
+            "ics": "https://canvas.uccs.edu/feeds/calendars/course_o45SBtiD31lSAIR224GGzpCbYhkA8a4R3rVk5k6R.ics"
+        },
+        "time_zone": "America/Denver",
+        "blueprint": false,
+        "template": false,
+        "enrollments": [
+            {
+                "type": "student",
+                "role": "StudentEnrollment",
+                "role_id": 3,
+                "user_id": 131197,
+                "enrollment_state": "active",
+                "limit_privileges_to_course_section": false
+            }
+        ],
+        "hide_final_grades": false,
+        "workflow_state": "available",
+        "restrict_enrollments_to_course_dates": false
+    },
+    {
+        "id": 140208,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 140207,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 143940,
+        "access_restricted_by_date": true
+    },
+    {
+        "id": 163421,
+        "access_restricted_by_date": true
+    }
+]
