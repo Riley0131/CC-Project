@@ -72,6 +72,7 @@ def sortUrls(urls):
 
     youtube = []
     canvas = []
+    panopto = []
     other = []
 
     for u in urls:
@@ -84,6 +85,9 @@ def sortUrls(urls):
         elif "canvas" in u:
             print(f"Debug: Found Canvas URL: {u}")
             canvas.append(u)
+        elif "panopto" in u:
+            print(f"Debug: Found Pantopto URL: {u}")
+            panopto.append(u)
         else:
             print(f"Debug: Found other URL: {u}")
             other.append(u)
@@ -91,6 +95,7 @@ def sortUrls(urls):
     return {
         "youtube": youtube,
         "canvas": canvas,
+        "panopto": panopto,
         "other": other
     }
             

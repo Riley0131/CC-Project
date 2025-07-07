@@ -1,0 +1,3 @@
+Client Name	CC Project Key
+Client Id	068e33a0-bfbc-4c0c-ad4a-b313012bb842
+Client Secret	Ci/mQ6eisluqmTpAMPKYNoQHSW8RjO9ue+GL63KMyp8=
