@@ -9,6 +9,9 @@ from youtubeVideo import get_youtube_videos, auditVideo
 import os
 import json
 import sys
+import embeddedVideo
+
+
 
 def main(courseID):
     #pull the modules for the course & save to json
@@ -51,6 +54,8 @@ def main(courseID):
         # Write back to file
         with open(file_path, "w") as f:
             json.dump(data, f, indent=4)
+
+    embeddedVideo.main(courseID) #run embeddedvideo.py on the courseID
 
 
 
