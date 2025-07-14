@@ -12,7 +12,7 @@ CANVAS_BASE_URL = "https://canvas.uccs.edu/api/v1"
 HEADERS = {"Authorization": f"Bearer {CANVAS_API_TOKEN}"}
 
 
-
+#retrieves all courses that the user is enrolled in
 def get_courses():
     print("Debug: Fetching courses")
     courses = []
@@ -40,9 +40,8 @@ def get_courses():
 
     return courses
     
-
+#Fetches all modules for a specific course
 def getCourseModules(course_id):
-    #Fetches all modules for a specific course
     url = f"{CANVAS_BASE_URL}/courses/{course_id}/modules"
     response = requests.get(url, headers=HEADERS)
     if response.status_code == 200:
@@ -119,7 +118,7 @@ def main():
         with open(f'data/courseModules/modules_{course}.json', 'w') as f:
             json.dump(modules, f, indent=4)
 
-
+    #sort modules and save to json
     for course in courses_ids:
         with open(f'data/courseModules/modules_{course}.json', 'r') as f:
             urls = json.load(f)
