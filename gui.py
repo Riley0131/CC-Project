@@ -33,7 +33,7 @@ def load_and_count_json():
     except Exception as e:
         messagebox.showerror("Error", f"Failed to process file: {e}")
 
-def runIndividualAudit():
+def runIndividualAudit(ivCourseId):
     course = ivCourseId.get().strip()
     
     if not course:
@@ -92,7 +92,7 @@ def main():
     ivCourseId.pack(pady=5)
 
     #run individual course audit button
-    individualAuditButton = tk.Button(root, text="Run Individual Course Audit", command=runIndividualAudit)
+    individualAuditButton = tk.Button(root, text="Run Individual Course Audit", command=lambda: runIndividualAudit(ivCourseId))
     individualAuditButton.pack(pady=10)
 
     #summarize json button
