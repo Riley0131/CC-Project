@@ -84,7 +84,7 @@ def sortUrls(urls):
         elif "canvas" in u:
             print(f"Debug: Found Canvas URL: {u}")
             canvas.append(u)
-        elif "panopto" in u:
+        elif "panopto" in u and "files":
             print(f"Debug: Found Pantopto URL: {u}")
             panopto.append(u)
         else:
