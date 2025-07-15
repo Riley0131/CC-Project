@@ -7,6 +7,8 @@
 
 import pullModules
 import youtubeVideo
+import embeddedVideo
+import sys, json
 
 
 def main():
@@ -14,6 +16,15 @@ def main():
     pullModules.main()
     youtubeVideo.main()
     print("Debug: Audit completed successfully")
+
+    #run embedded video script on all courses
+    with open ("data/courses_ids.json", "r") as f:
+        courses = json.load(f)
+
+    for course in courses:
+        print(f"Debug: Auditing embedded videos for course {course}")
+        embeddedVideo.main(course)
+
 
 
 if __name__ == "__main__":

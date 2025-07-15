@@ -82,7 +82,7 @@ def main(courseID):
     with open(file_path, "w") as f:
         json.dump(data, f, indent=4)
 
-    driver.quit()
+    #driver.quit()
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
