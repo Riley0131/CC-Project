@@ -4,13 +4,15 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import os, time, json, sys
+from pathlib import Path
 
 #set up chrome & Driver
 chrome_opts = Options()
 chrome_opts.binary_location = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 
 #store profile data in a specific folder
-user_data = r"C:\Users\riley\SeleniumProfile"
+home = Path.home()
+user_data = home / "SeleniumProfile"
 
 os.makedirs(user_data, exist_ok=True)
 chrome_opts.add_argument(f"--user-data-dir={user_data}")

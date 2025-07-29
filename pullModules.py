@@ -64,6 +64,9 @@ def getCourseModules(course_id):
         return urls
     
 def sortUrls(urls):
+    """
+    Sorts the different url's based on type
+    """
     print("Debug: Sorting URLs")
     if not urls:
         print("Debug: No URLs to sort")
@@ -74,6 +77,7 @@ def sortUrls(urls):
     panopto = []
     other = []
 
+    
     for u in urls:
         if not isinstance(u, str):
             print(f"Debug: Skipping non-string URL: {u}")
@@ -81,12 +85,12 @@ def sortUrls(urls):
         if "youtu" in u:
             print(f"Debug: Found YouTube URL: {u}")
             youtube.append(u)
-        elif "canvas" in u:
-            print(f"Debug: Found Canvas URL: {u}")
-            canvas.append(u)
-        elif "panopto" in u and "files":
+        elif ("panopto" in u and "files") or ("3018650" in u):
             print(f"Debug: Found Pantopto URL: {u}")
             panopto.append(u)
+        elif ("canvas" in u) and ("files" in u):
+            print(f"Debug: Found Canvas URL: {u}")
+            canvas.append(u)
         else:
             print(f"Debug: Found other URL: {u}")
             other.append(u)
