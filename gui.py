@@ -10,6 +10,7 @@ import subprocess
 import json
 import os
 import re
+from config.version import version
 
 def dataReset():
     subprocess.run(["python", "dataReset.py"])
@@ -100,7 +101,7 @@ def main():
     root.wait_window(warningWindow)
 
     # GUI Setup
-    root.title("UCCS Closed Captioning Audit")
+    root.title(f"UCCS Closed Captioning Audit {version}")
     root.geometry("500x350")
 
     tk.Label(root, text="UCCS Closed Captioning Audit", font=("Arial", 20)).pack(pady=10)

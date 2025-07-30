@@ -3,7 +3,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-import os, time, json, sys
+import os, time, json, sys, tempfile
+import tkinter as tk
 from pathlib import Path
 
 #set up chrome & Driver
@@ -11,18 +12,34 @@ chrome_opts = Options()
 chrome_opts.binary_location = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 
 #store profile data in a specific folder
-home = Path.home()
-user_data = home / "SeleniumProfile"
-
-os.makedirs(user_data, exist_ok=True)
-chrome_opts.add_argument(f"--user-data-dir={user_data}")
+profile_dir = tempfile.mkdtemp(prefix="selenium-")
+chrome_opts.add_argument(f"--user-data-dir={profile_dir}")
 
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=chrome_opts)
 
 def canvasLogin():
     driver.get("https://canvas.uccs.edu/login")
-    time.sleep(10)
+    root = tk.Tk()
+    root.title("Canvas Login")
+    root.geometry("300x120")
+    
+    label = tk.Label(
+        root,
+        text="Once you have logged in press save password and press the button below",
+        justify="center"
+    )
+    label.pack(pady=(15,5))
+    
+    btn = tk.Button(
+        root,
+        text="Continue",
+        width=12,
+        command=root.destroy
+    )
+    btn.pack(pady=(0,15))
+
+    root.mainloop
 
 #load canvas page
 def auditCanvasPage(canvas_url):
@@ -53,7 +70,7 @@ def truncateCanvasUrl(links):
     return [link.replace("/api/v1", "") for link in links]
 
 def main(courseID):
-    canvasLogin()
+    # canvasLogin()
     embeddedVideos = getEmbeddedVideos(courseID)
     embeddedVideos = truncateCanvasUrl(embeddedVideos)
     results = []
