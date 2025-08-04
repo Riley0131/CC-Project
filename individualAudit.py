@@ -55,6 +55,7 @@ def main(courseID):
         with open(file_path, "w") as f:
             json.dump(data, f, indent=4)
 
+
     embeddedVideo.main(courseID) #run embeddedvideo.py on the courseID
 
 

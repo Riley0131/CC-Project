@@ -10,6 +10,14 @@ import youtubeVideo
 import embeddedVideo
 import sys, json
 
+def sortEmbedNeed(courses):
+    embeddedmodulesToAudit = []
+    for course in courses:
+        if "embeddedVideos" in course:
+            for module in course["embeddedVideos"]:
+                if "videoId" in module:
+                    embeddedmodulesToAudit.append(module)
+
 
 def main():
     print("Debug: Starting audit")
@@ -21,9 +29,9 @@ def main():
     with open ("data/courses_ids.json", "r") as f:
         courses = json.load(f)
 
-    for course in courses:
-        print(f"Debug: Auditing embedded videos for course {course}")
-        embeddedVideo.main(course)
+    embeddedVideosToAudit = sortEmbedNeed(courses)
+    for video in embeddedVideosToAudit:
+        print(video)
 
 
 

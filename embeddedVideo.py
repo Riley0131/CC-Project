@@ -5,107 +5,84 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import os, time, json, sys, tempfile
 import tkinter as tk
-from pathlib import Path
+import chromeSetup
 
-#set up chrome & Driver
-chrome_opts = Options()
-chrome_opts.binary_location = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+def make_driver(profile_dir: str):
+    opts = Options()
+    opts.binary_location = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+    # use your persistent profile
+    opts.add_argument(f"--user-data-dir={profile_dir}")
+    # stability flags
+    opts.add_argument("--disable-gpu")
+    opts.add_argument("--no-sandbox")
+    opts.add_argument("--disable-dev-shm-usage")
+    service = Service(ChromeDriverManager().install())
+    return webdriver.Chrome(service=service, options=opts)
 
-#store profile data in a specific folder
-profile_dir = tempfile.mkdtemp(prefix="selenium-")
-chrome_opts.add_argument(f"--user-data-dir={profile_dir}")
-
-service = Service(ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service, options=chrome_opts)
-
-def canvasLogin():
-    driver.get("https://canvas.uccs.edu/login")
-    root = tk.Tk()
-    root.title("Canvas Login")
-    root.geometry("300x120")
-    
-    label = tk.Label(
-        root,
-        text="Once you have logged in press save password and press the button below",
-        justify="center"
-    )
-    label.pack(pady=(15,5))
-    
-    btn = tk.Button(
-        root,
-        text="Continue",
-        width=12,
-        command=root.destroy
-    )
-    btn.pack(pady=(0,15))
-
-    root.mainloop
-
-#load canvas page
-def auditCanvasPage(canvas_url):
+def auditCanvasPage(driver, canvas_url: str) -> bool:
     driver.get(canvas_url)
-    time.sleep(5)  # wait for the page to load
+    time.sleep(5)
     buttons = driver.find_elements(
         By.CSS_SELECTOR,
         "button.controls-button[aria-label='Disable Captions'],"
         "button.controls-button[aria-label='Enable Captions']"
     )
-
     return bool(buttons)
-    
 
-def getEmbeddedVideos(courseID):
+def getEmbeddedVideos(courseID: str):
     filePath = f"data/sortedModules/sorted_modules_{courseID}.json"
-    videos = []
-    if os.path.exists(filePath):
-        with open(filePath, "r") as f:
-            data = json.load(f)
-        
-        return data.get("canvas", [])
-    else:
-        print(f"Debug: No sorted modules found for course {courseID}")
+    if not os.path.exists(filePath):
+        print(f"[!] No sorted modules for course {courseID}")
         return []
-    
+    with open(filePath) as f:
+        return json.load(f).get("canvas", [])
+
 def truncateCanvasUrl(links):
     return [link.replace("/api/v1", "") for link in links]
 
-def main(courseID):
-    # canvasLogin()
-    embeddedVideos = getEmbeddedVideos(courseID)
-    embeddedVideos = truncateCanvasUrl(embeddedVideos)
-    results = []
+def main(courseID: str):
+    # 1) Prepare profile folder
+    profile_path = os.path.join(os.getcwd(), "selenium_profile")
+    os.makedirs(profile_path, exist_ok=True)
 
-    for video_url in embeddedVideos:
-        has_captions = auditCanvasPage(video_url)
+    # 2) Launch browser once
+    driver = make_driver(profile_path)
+
+    # 3) Prompt user to log in (and save credentials)
+    chromeSetup.canvasLogin(driver)
+
+    # 4) Load your JSON-driven list of video URLs
+    vids = truncateCanvasUrl(getEmbeddedVideos(courseID))
+
+    # 5) Audit each one
+    results = []
+    for url in vids:
         results.append({
             "type": "canvas",
-            "url": video_url,
-            "has_captions": has_captions,
+            "url": url,
+            "has_captions": auditCanvasPage(driver, url),
             "course_id": courseID
         })
 
-    file_path = "data/audited_videos.json"
-
-    # Load existing data or initialize an empty list
-    if os.path.exists(file_path):
-        with open(file_path, "r") as f:
+    # 6) Save or append to your output file
+    out_path = "data/audited_videos.json"
+    if os.path.exists(out_path):
+        with open(out_path) as f:
             try:
-                data = json.load(f)
+                existing = json.load(f)
             except json.JSONDecodeError:
-                data = []
+                existing = []
     else:
-        data = []
+        existing = []
 
-    data.extend(results)
+    existing.extend(results)
+    with open(out_path, "w") as f:
+        json.dump(existing, f, indent=2)
 
-    with open(file_path, "w") as f:
-        json.dump(data, f, indent=4)
-
-    #driver.quit()
+    driver.quit()
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
+    if len(sys.argv) != 2:
         print("Usage: python embeddedVideo.py <courseID>")
-    else:
-        main(sys.argv[1])
-
+        sys.exit(1)
+    main(sys.argv[1])
