@@ -1,10 +1,10 @@
 #Riley O'Shea
 #University of Colorado Colorado Springs
 #7/29/25
-#Graphical User Interface, this is the head of the program that allows the user to run audits, delete and manage data, or make changes to the api key from a GUI
-
+#Graphical User Interface for user interaction with auditing tool
 
 import tkinter as tk
+import tkinter.ttk as tkk
 from tkinter import messagebox
 import subprocess
 import json
@@ -13,17 +13,20 @@ import re
 from config.version import version
 
 def dataReset():
+    """Reset all data by running the dataReset script."""
     subprocess.run(["python", "dataReset.py"])
     messagebox.showinfo("Reset", "Data has been reset successfully.")
 
 
 def showAuditResults():
+    """show a message box showing the count of videos with and without captions."""
     messagebox.showinfo("Audit", "Running audit, this may take a while depending on the number of videos.")
     subprocess.run(["python", "runAudit.py"], capture_output=True, text=True)
     messagebox.showinfo("Audit Complete", "Audit completed successfully. Check the 'data' folder for results.")
 
 
 def load_and_count_json():
+    """Load the JSON file and count videos with and without captions."""
     file_path = os.path.join("data", "audited_videos.json")
     if not os.path.exists(file_path):
         messagebox.showerror("Error", "No audit data found.")
@@ -44,6 +47,12 @@ def load_and_count_json():
 
 
 def runIndividualAudit(course_id):
+    """
+    args:
+        course_id (str): The ID of the course to audit.
+    Run an individual course aduit. Results will be saved in the 'data' folder.
+    
+    """
     subprocess.run(["python", "individualAudit.py", course_id])
     messagebox.showinfo(
         "Audit Complete",
@@ -52,6 +61,7 @@ def runIndividualAudit(course_id):
 
 
 def loadCanvasAPIToken():
+    """Pull the Canvas API token from the config file."""
     config_path = os.path.join(os.path.dirname(__file__), "config", "canvasAPI.py")
     try:
         with open(config_path, "r") as f:
@@ -65,6 +75,11 @@ def loadCanvasAPIToken():
 
 
 def saveCanvasAPIToken(token):
+    """
+    args:
+        token (str): The Canvas API token to save.
+    Save the Canvas API token to the config file.
+    """
     config_path = os.path.join(os.path.dirname(__file__), "config", "canvasAPI.py")
     try:
         with open(config_path, "r") as f:
@@ -82,25 +97,20 @@ def saveCanvasAPIToken(token):
 
 
 def main():
-    root = tk.Tk()
-
-    # --- Modal Warning Window ---
-    warningWindow = tk.Toplevel(root)
+    warningWindow = tk.Tk()
     warningWindow.title("In Development")
-    warningWindow.geometry("350x200")
-    warningWindow.transient(root)
-    warningWindow.grab_set()
-    warningWindow.focus_force()
+    warningWindow.geometry("400x200")
 
     msg = (
         "This tool is still under development. Please only use it as a tool to streamline the auditing process."
-        "\n\nCurrently there is a known issue where the program may present false negatives for some youtube videos."
     )
     tk.Label(warningWindow, text=msg, wraplength=300, justify="center").pack(pady=20)
     tk.Button(warningWindow, text="I understand", command=warningWindow.destroy).pack(pady=10)
-    root.wait_window(warningWindow)
+
+    warningWindow.mainloop()
 
     # GUI Setup
+    root = tk.Tk()
     root.title(f"UCCS Closed Captioning Audit {version}")
     root.geometry("500x350")
 

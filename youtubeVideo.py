@@ -2,7 +2,6 @@
 #University of Colorado Colorado Springs
 #06/25/2025
 
-#
 import json
 from youtube_transcript_api import YouTubeTranscriptApi 
 import time
@@ -10,6 +9,13 @@ import os
 
 
 def normalize_youtube_url(url):
+    """    
+    Normalize YouTube URLs to a standard format.
+    Args:
+        url (str): The YouTube URL to normalize.
+    Returns:
+        str: Normalized YouTube URL or None if not a valid YouTube URL.
+    """
     if "youtu.be/" in url:
         video_id = url.split("youtu.be/")[-1].split("?")[0]
         return f"https://www.youtube.com/watch?v={video_id}"
@@ -21,6 +27,13 @@ def normalize_youtube_url(url):
 
 #Gets all youtube videos from user courses
 def get_youtube_videos(courses):
+    """
+    args:
+        courses: list of course IDs to process
+    returns:
+        ytv: list of YouTube video URLs found in the courses
+    This function retrieves YouTube video URLs from the specified courses.
+    """
     print("Debug: Fetching YouTube videos from courses")
     ytv = []
     for c in courses:
@@ -44,6 +57,13 @@ def get_youtube_videos(courses):
 
 #audit a single video to see if it has captions
 def auditVideo(url):
+    """
+    args:
+        url: the YouTube URL to audit
+    returns:
+        has_captions: boolean indicating if the video has captions
+    This function checks if a YouTube video has captions using the YouTube Transcript API.
+    """
     time.sleep(5)
     v = url.replace("https://www.youtube.com/watch?v=", "").replace("https://youtu.be/", "")
     try:

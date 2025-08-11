@@ -1,10 +1,12 @@
 # Closed Captioning Audit
+This tool is designed for auditing Canvas courses to ensure accessibility compliance by giving the user a detailed list of videos from a single course or multiple courses and if they contain captions.  
 Developed by: Riley O'Shea  
 Email: roshea@uccs.edu  
 University of Colorado Colorado Springs
 
 # Warning / Disclaimer
-This program is still under development and may have issues, please use caution when using audit results. For known issues and bugs visit: https://github.com/Riley0131/CC-Project/issues
+This program is still under development and may have issues, please use caution when using audit results. For known issues and bugs visit: https://github.com/Riley0131/CC-Project/issues  
+This tool does not accept videos with "burned in captions" (captions that are an overlay in the video not a true caption file) they will not be identified as having captions
 
 # Supported Video Types
 Youtube Videos (public videos only)  

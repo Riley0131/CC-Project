@@ -1,0 +1,8 @@
+Beta Versions
+0.1.0
+-Fully functional individual course audits
+-Embedded Video Support, youtube video support
+-result summary
+-adjustable settings for canvas api key
+-requires canvas account with access to courses to audit
+-data can be easily reset by the user

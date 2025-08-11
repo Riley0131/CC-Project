@@ -9,11 +9,19 @@ from youtubeVideo import get_youtube_videos, auditVideo
 import os
 import json
 import sys
-import embeddedVideo
+import sortEmbeddedVideos
 
 
 
 def main(courseID):
+    """
+    args:
+        courseID (str): The ID of the course to audit.
+    returns:
+        Results printed in 'data\audited_videos.json'
+    Individual course aduit script.
+
+    """
     #pull the modules for the course & save to json
     modules = getCourseModules(courseID)
     with open(f'data/courseModules/modules_{courseID}.json', 'w') as f:
@@ -56,7 +64,8 @@ def main(courseID):
             json.dump(data, f, indent=4)
 
 
-    embeddedVideo.main(courseID) #run embeddedvideo.py on the courseID
+    # embeddedVideo.main(courseID) #run embeddedvideo.py on the courseID
+    sortEmbeddedVideos.main([courseID])  # run sortEmbeddedVideos.py on the courseID
 
 
 

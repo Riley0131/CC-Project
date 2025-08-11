@@ -14,6 +14,7 @@ HEADERS = {"Authorization": f"Bearer {CANVAS_API_TOKEN}"}
 
 #retrieves all courses that the user is enrolled in
 def get_courses():
+    '''Fetches all courses the user is enrolled in from Canvas API.'''
     print("Debug: Fetching courses")
     courses = []
     url = f"{CANVAS_BASE_URL}/courses"
@@ -42,6 +43,12 @@ def get_courses():
     
 #Fetches all modules for a specific course
 def getCourseModules(course_id):
+    """Fetches all modules for a specific course from Canvas API.
+    Args:
+        course_id (int): The ID of the course to fetch modules for.
+    Returns:
+        list: A list of URLs for items in the course modules.
+    """
     url = f"{CANVAS_BASE_URL}/courses/{course_id}/modules"
     response = requests.get(url, headers=HEADERS)
     if response.status_code == 200:
@@ -66,6 +73,11 @@ def getCourseModules(course_id):
 def sortUrls(urls):
     """
     Sorts the different url's based on type
+    args:
+        urls (list): A list of URLs to sort.
+    Returns:
+        dict: A dictionary with sorted URLs categorized by type.
+        The keys are 'youtube', 'canvas', 'panopto', and 'other'.
     """
     print("Debug: Sorting URLs")
     if not urls:
