@@ -5,9 +5,9 @@
 
 import tkinter as tk
 import tkinter.ttk as tkk
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 import subprocess
-import json
+import json, sys
 import os
 import re
 from config.version import version
@@ -25,25 +25,34 @@ def showAuditResults():
     messagebox.showinfo("Audit Complete", "Audit completed successfully. Check the 'data' folder for results.")
 
 
-def load_and_count_json():
-    """Load the JSON file and count videos with and without captions."""
-    file_path = os.path.join("data", "audited_videos.json")
-    if not os.path.exists(file_path):
-        messagebox.showerror("Error", "No audit data found.")
+def open_json_file():
+    """
+    Open the audited videos JSON in the system's default application.
+    Tries both 'audited_videos.json' and 'auditedVideos.json' just in case.
+    """
+    # Try both common names
+    candidates = [
+        os.path.join("data", "audited_videos.json"),
+        os.path.join("data", "auditedVideos.json"),
+    ]
+    file_path = next((p for p in candidates if os.path.exists(p)), None)
+
+    if not file_path:
+        messagebox.showerror("Error", "Could not find audited videos JSON in /data.")
         return
+
+    # Normalize to an absolute path
+    file_path = os.path.abspath(file_path)
+
     try:
-        with open(file_path, "r") as f:
-            data = json.load(f)
-
-        has_captions_count = sum(1 for item in data if item.get("has_captions") is True)
-        no_captions_count = sum(1 for item in data if item.get("has_captions") is False)
-
-        messagebox.showinfo(
-            "Audit Summary",
-            f"Videos with Captions: {has_captions_count}\nVideos without Captions: {no_captions_count}"
-        )
+        if sys.platform.startswith("win"):
+            os.startfile(file_path)  # type: ignore[attr-defined]
+        elif sys.platform == "darwin":
+            subprocess.Popen(["open", file_path])
+        else:
+            subprocess.Popen(["xdg-open", file_path])
     except Exception as e:
-        messagebox.showerror("Error", f"Failed to process file: {e}")
+        messagebox.showerror("Error", f"Failed to open file:\n{e}")
 
 
 def runIndividualAudit(course_id):
@@ -56,7 +65,7 @@ def runIndividualAudit(course_id):
     subprocess.run(["python", "individualAudit.py", course_id])
     messagebox.showinfo(
         "Audit Complete",
-        f"Audit for course {course_id} completed successfully. Check the 'data' folder for results."
+        f"Audit for course {course_id} completed successfully. Press 'View Results' to see the results.",
     )
 
 
@@ -164,7 +173,7 @@ def main():
 
     # Main buttons
     tk.Button(root, text="Run Individual Course Audit", command=promptIndividualAudit).pack(pady=10)
-    tk.Button(root, text="Summarize results", command=load_and_count_json).pack(pady=10)
+    tk.Button(root, text="View Results", command=open_json_file).pack(pady=10)
     tk.Button(root, text="Settings", command=promptSettings).pack(pady=10)
     tk.Button(root,
               text="Reset Data (WARNING: All existing data will be lost!)",
