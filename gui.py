@@ -106,18 +106,6 @@ def saveCanvasAPIToken(token):
 
 
 def main():
-    warningWindow = tk.Tk()
-    warningWindow.title("In Development")
-    warningWindow.geometry("400x200")
-
-    msg = (
-        "This tool is still under development. Please only use it as a tool to streamline the auditing process."
-    )
-    tk.Label(warningWindow, text=msg, wraplength=300, justify="center").pack(pady=20)
-    tk.Button(warningWindow, text="I understand", command=warningWindow.destroy).pack(pady=10)
-
-    warningWindow.mainloop()
-
     # GUI Setup
     root = tk.Tk()
     root.title(f"UCCS Closed Captioning Audit {version}")

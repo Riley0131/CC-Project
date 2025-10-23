@@ -10,6 +10,7 @@ A toolkit for auditing Canvas courses to confirm that instructional videos provi
 | `individualAudit.py` | Audits a single Canvas course without touching other course data. |
 | `pullModules.py` | Fetches courses via the Canvas API, downloads module contents, and classifies video links by platform. |
 | `youtubeVideo.py` | Normalizes YouTube URLs and verifies whether each video exposes captions via the YouTube Transcript API. |
+| `panoptoVideo.py` | Checks Panopto recordings using the REST API when possible and falls back to Selenium to detect caption controls. |
 | `sortEmbeddedVideos.py` | Launches Selenium to inspect Canvas pages that host embedded media and records caption availability. |
 | `gui.py` | Desktop interface that wraps the scripts above for non-technical users. |
 | `dataReset.py` | Utility that clears cached JSON results inside the `data/` directory tree. |
@@ -49,7 +50,7 @@ Optional but recommended:
    ```
 5. **Configure API credentials**:
    * Open `config/canvasAPI.py` and paste your Canvas access token into `CANVAS_API_TOKEN`. Follow the instructions in Canvas to generate a new token when needed.
-   * If Panopto support is enabled in your environment, place the OAuth client values in `config/panoptoKey.py`.
+   * If Panopto support is enabled in your environment, place the OAuth client values in `config/panoptoKey.py`. The Panopto auditor first attempts to use the REST API (client credentials grant) and will prompt for a manual browser login if Selenium fallback is required.
 6. **(Optional) Update the displayed version** by editing `config/version.py`.
 
 ## Running audits
@@ -65,6 +66,8 @@ This command writes fresh data into the `data/` directory. A successful pass pro
 * `data/courseModules/modules_<course_id>.json` – module URLs per course.
 * `data/sortedModules/sorted_modules_<course_id>.json` – URLs grouped by platform.
 * `data/audited_videos.json` – consolidated caption audit results across all platforms.
+
+During Selenium-based checks (Canvas media pages or Panopto fallback), a browser window opens and a dialog requests confirmation once you finish logging in.
 
 ### Graphical interface
 Launch the Tkinter GUI to run the same workflows without a terminal:
@@ -96,7 +99,8 @@ The command removes files under `data/`, `data/courseModules/`, and `data/sorted
 
 1. **Course & module ingestion (`pullModules.py`)**: Calls the Canvas API using `CANVAS_API_TOKEN`, collects module item URLs, and buckets them by platform with `sortUrls()`.
 2. **YouTube caption verification (`youtubeVideo.py`)**: Normalizes short and long YouTube URLs, then queries the YouTube Transcript API to determine caption availability. Results append to `data/audited_videos.json` with `"type": "youtube"`.
-3. **Embedded Canvas media scan (`sortEmbeddedVideos.py`)**: Launches Chrome via Selenium, pauses for manual Canvas login, loads each Canvas-hosted media page, and checks for a captions control. Each URL yields a `"type": "Canvas"` entry in `data/audited_videos.json`.
+3. **Panopto caption verification (`panoptoVideo.py`)**: Attempts to query the Panopto REST API for each discovered session ID; if the API denies access, Selenium opens the recording to search the player UI for caption controls. Each entry is saved with `"type": "panopto"`.
+4. **Embedded Canvas media scan (`sortEmbeddedVideos.py`)**: Launches Chrome via Selenium, pauses for manual Canvas login, loads each Canvas-hosted media page, and checks for a captions control. Each URL yields a `"type": "Canvas"` entry in `data/audited_videos.json`.
 
 If any step fails (for example, invalid JSON or API errors), the scripts emit diagnostic messages to the console. Fix the issue, delete stale files with `dataReset.py`, and rerun the audit.
 
@@ -105,7 +109,7 @@ If any step fails (for example, invalid JSON or API errors), the scripts emit di
 The primary output, `data/audited_videos.json`, is a list of dictionaries with the following shape:
 ```json
 {
-  "type": "youtube" | "Canvas",
+  "type": "youtube" | "Canvas" | "panopto",
   "url": "https://…",
   "has_captions": true | false,
   "course_id": "12345"        # present for individual audits

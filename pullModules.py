@@ -94,13 +94,16 @@ def sortUrls(urls):
         if not isinstance(u, str):
             print(f"Debug: Skipping non-string URL: {u}")
             continue
-        if "youtu" in u:
+
+        lower = u.lower()
+
+        if "youtu" in lower:
             print(f"Debug: Found YouTube URL: {u}")
             youtube.append(u)
-        elif ("panopto" in u and "files") or ("3018650" in u):
-            print(f"Debug: Found Pantopto URL: {u}")
+        elif "panopto" in lower:
+            print(f"Debug: Found Panopto URL: {u}")
             panopto.append(u)
-        elif ("canvas" in u) and ("files" in u):
+        elif ("canvas" in lower) and ("files" in lower):
             print(f"Debug: Found Canvas URL: {u}")
             canvas.append(u)
         else:
