@@ -6,6 +6,7 @@
 
 from pullModules import getCourseModules, sortUrls
 from youtubeVideo import get_youtube_videos, auditVideo
+import panoptoVideo
 import os
 import json
 import sys
@@ -64,6 +65,7 @@ def main(courseID):
             json.dump(data, f, indent=4)
 
 
+    panoptoVideo.main([courseID], include_course_ids=True)
     # embeddedVideo.main(courseID) #run embeddedvideo.py on the courseID
     sortEmbeddedVideos.main([courseID])  # run sortEmbeddedVideos.py on the courseID
 

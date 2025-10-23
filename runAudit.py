@@ -7,6 +7,7 @@
 
 import pullModules
 import youtubeVideo
+import panoptoVideo
 import sortEmbeddedVideos
 import sys, json
     
@@ -16,6 +17,7 @@ def main():
     print("Debug: Starting audit")
     pullModules.main()
     youtubeVideo.main()
+    panoptoVideo.main()
     print("Debug: Audit completed successfully")
 
     #create a container for all course IDs
