@@ -1,20 +1,20 @@
 """Panopto caption auditor.
 
-This module inspects Panopto links discovered during the Canvas course scan and
-records whether captions are available. It first attempts to query the Panopto
-REST API using the OAuth client configured in ``config/panoptoKey.py``. If the
-API request fails (for example, because credentials are missing or insufficient
-permissions), it falls back to Selenium automation to look for caption controls
-in the embedded player UI.
+This module queries the Canvas API for external Panopto player links
+(``Embed.aspx``/``Viewer.aspx``) and records whether captions are available. It
+drives Selenium to open each discovered URL and scan the player UI for caption
+controls before falling back to the Panopto REST API when Selenium cannot
+determine an answer.
 """
 
 from __future__ import annotations
 
 import json
 import os
+import re
 import time
 from dataclasses import dataclass
-from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Dict, Iterable, List, Optional, Sequence, Set, Tuple
 from urllib.parse import parse_qs, urlparse, urlunparse
 
 try:  # GUI prompt for manual authentication if Selenium needs it
@@ -23,6 +23,7 @@ except Exception:  # pragma: no cover - headless environments may not provide Tk
     tk = None  # type: ignore
 
 import requests
+import pullModules
 from requests.auth import HTTPBasicAuth
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException, WebDriverException
@@ -78,9 +79,12 @@ def _normalize_panopto_url(url: str) -> str:
         return url
 
     path = parsed.path or ""
-    if "Embed.aspx" in path:
-        path = path.replace("Embed.aspx", "Viewer.aspx")
-        parsed = parsed._replace(path=path)
+    fragment = (parsed.fragment or "").lower()
+    lower_path = path.lower()
+
+    if "embed.aspx" in lower_path and "access_token" not in fragment:
+        updated_path = re.sub(r"embed\.aspx", "Viewer.aspx", path, flags=re.IGNORECASE)
+        parsed = parsed._replace(path=updated_path)
         return urlunparse(parsed)
 
     return url
@@ -105,30 +109,90 @@ def _extract_session_id(url: str) -> Optional[str]:
     return None
 
 
+def _is_panopto_player_url(url: str) -> bool:
+    if not isinstance(url, str):
+        return False
+
+    try:
+        parsed = urlparse(url)
+    except Exception:
+        return False
+
+    netloc = (parsed.netloc or "").lower()
+    path = (parsed.path or "").lower()
+
+    if "panopto" not in netloc:
+        return False
+
+    if "/panopto/pages/" not in path:
+        return False
+
+    return any(keyword in path for keyword in ("embed.aspx", "viewer.aspx", "auth/viewer.aspx"))
+
+
+def _fetch_panopto_links_from_canvas(course_id: str) -> List[str]:
+    try:
+        module_urls = pullModules.getCourseModules(course_id)
+    except Exception as exc:
+        print(f"Error retrieving module URLs from Canvas for course {course_id}: {exc}")
+        return []
+
+    if not module_urls:
+        return []
+
+    sorted_urls = pullModules.sortUrls(module_urls)
+    candidates = []
+
+    if isinstance(sorted_urls, dict):
+        raw_candidates = sorted_urls.get("panopto") or []
+        if isinstance(raw_candidates, list):
+            candidates = [u for u in raw_candidates if _is_panopto_player_url(u)]
+
+    return candidates
+
+
+def _fetch_panopto_links_from_cache(course_id: str) -> List[str]:
+    path = f"data/sortedModules/sorted_modules_{course_id}.json"
+    payload = _load_json_file(path)
+    if not isinstance(payload, dict):
+        return []
+
+    urls = payload.get("panopto")
+    if not isinstance(urls, list):
+        return []
+
+    return [url for url in urls if _is_panopto_player_url(url)]
+
+
 def _iter_panopto_links(courses: Iterable[str]) -> List[Tuple[str, str]]:
     """Return a ``[(course_id, url), …]`` list for Panopto links."""
 
     results: List[Tuple[str, str]] = []
 
     for course in courses:
-        path = f"data/sortedModules/sorted_modules_{course}.json"
-        payload = _load_json_file(path)
-        if not payload:
-            continue
+        course_id = str(course)
+        seen: Set[str] = set()
 
-        urls = payload.get("panopto") if isinstance(payload, dict) else None
+        urls = _fetch_panopto_links_from_canvas(course_id)
+        if not urls:
+            urls = _fetch_panopto_links_from_cache(course_id)
+
         if not urls:
             continue
 
-        seen: set[str] = set()
         for url in urls:
             if not isinstance(url, str):
                 continue
+
             normalized = _normalize_panopto_url(url)
-            if normalized in seen:
+            session_id = _extract_session_id(url) or _extract_session_id(normalized)
+            canonical = session_id or normalized
+
+            if canonical in seen:
                 continue
-            seen.add(normalized)
-            results.append((str(course), normalized))
+
+            seen.add(canonical)
+            results.append((course_id, url))
 
     return results
 
@@ -164,15 +228,27 @@ class PanoptoAuditor:
     # ------------------------------------------------------------------
     # public helpers
     def audit(self, url: str) -> bool:
-        base_url = self._base_url(url)
-        session_id = _extract_session_id(url)
+        visit_url = _normalize_panopto_url(url)
+        base_url = self._base_url(visit_url)
+        session_id = _extract_session_id(url) or _extract_session_id(visit_url)
 
+        selenium_result = self._check_via_selenium(base_url, visit_url)
+        if selenium_result is True:
+            return True
+
+        api_result: Optional[bool] = None
         if base_url and session_id:
             api_result = self._check_via_api(base_url, session_id)
+
+        if selenium_result is False:
+            return True if api_result is True else False
+
+        if selenium_result is None:
             if api_result is not None:
                 return api_result
+            return False
 
-        return self._check_via_selenium(base_url, url)
+        return api_result if api_result is not None else False
 
     def close(self) -> None:
         if self._driver:
@@ -285,43 +361,69 @@ class PanoptoAuditor:
         self._tokens[base_url] = _ApiToken(token_value, expiry)
         return token_value
 
-    def _check_via_selenium(self, base_url: Optional[str], url: str) -> bool:
+    def _check_via_selenium(self, base_url: Optional[str], url: str) -> Optional[bool]:
         driver = self._ensure_driver(base_url)
         if not driver:
-            print("Selenium driver could not be started; assuming captions unavailable.")
-            return False
+            print("Selenium driver could not be started; falling back to API if available.")
+            return None
 
         try:
             driver.get(url)
         except WebDriverException as exc:
             print(f"Error loading Panopto URL {url}: {exc}")
-            return False
+            return None
 
         try:
             WebDriverWait(driver, self.timeout).until(
                 EC.presence_of_element_located((By.TAG_NAME, "body"))
             )
         except TimeoutException:
+            print(f"Timed out waiting for Panopto player to load for {url}")
+            return None
+
+        try:
+            driver.switch_to.default_content()
+        except Exception:
+            pass
+
+        found = self._scan_for_captions(driver)
+
+        try:
+            driver.switch_to.default_content()
+        except Exception:
+            pass
+
+        return True if found else False
+
+    def _scan_for_captions(self, driver: webdriver.Chrome, depth: int = 0) -> bool:
+        if depth > 5:
             return False
 
         if self._captions_present(driver):
             return True
 
-        frames = driver.find_elements(By.TAG_NAME, "iframe")
+        try:
+            frames = driver.find_elements(By.CSS_SELECTOR, "iframe, frame")
+        except Exception:
+            frames = []
+
         for frame in frames:
+            found = False
             try:
                 WebDriverWait(driver, self.timeout).until(
                     EC.frame_to_be_available_and_switch_to_it(frame)
                 )
+                found = self._scan_for_captions(driver, depth + 1)
             except TimeoutException:
                 continue
-
-            try:
-                if self._captions_present(driver):
-                    driver.switch_to.default_content()
-                    return True
             finally:
-                driver.switch_to.default_content()
+                try:
+                    driver.switch_to.parent_frame()
+                except Exception:
+                    driver.switch_to.default_content()
+
+            if found:
+                return True
 
         return False
 
@@ -384,6 +486,42 @@ class PanoptoAuditor:
 
     @staticmethod
     def _captions_present(driver: webdriver.Chrome) -> bool:
+        keywords = ("caption", "captions", "subtitle", "subtitles")
+
+        def _contains_keyword(value: Optional[str]) -> bool:
+            if not value:
+                return False
+
+            value_lower = value.lower()
+            if any(keyword in value_lower for keyword in keywords):
+                return True
+
+            return bool(re.search(r"\bcc\b", value_lower))
+
+        try:
+            interactive_elements = driver.find_elements(
+                By.XPATH,
+                "//button | //a | //div | //span | //*[@aria-label or @title or @data-tooltip or @data-original-title or @class or @id]",
+            )
+        except Exception:
+            interactive_elements = []
+
+        for element in interactive_elements:
+            attributes = [
+                element.get_attribute("aria-label"),
+                element.get_attribute("title"),
+                element.get_attribute("data-tooltip"),
+                element.get_attribute("data-original-title"),
+                element.get_attribute("data-testid"),
+                element.get_attribute("data-qa"),
+                element.get_attribute("class"),
+                element.get_attribute("id"),
+                element.text,
+            ]
+
+            if any(_contains_keyword(value) for value in attributes):
+                return True
+
         # Look for <track> elements that expose captions/subtitles
         try:
             tracks = driver.find_elements(By.TAG_NAME, "track")
@@ -394,19 +532,6 @@ class PanoptoAuditor:
             kind = (track.get_attribute("kind") or "").lower()
             src = track.get_attribute("src")
             if kind in {"captions", "subtitles"} and src:
-                return True
-
-        try:
-            elements = driver.find_elements(By.XPATH, "//*[@aria-label or @class or normalize-space(text())]")
-        except Exception:
-            elements = []
-
-        for element in elements:
-            label = (element.get_attribute("aria-label") or "").lower()
-            classes = (element.get_attribute("class") or "").lower()
-            text = (element.text or "").lower()
-            combined = " ".join(part for part in [label, classes, text] if part)
-            if any(keyword in combined for keyword in ("captions", "subtitle", "subtitles", "cc")):
                 return True
 
         return False

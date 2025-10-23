@@ -12,15 +12,39 @@ CANVAS_BASE_URL = "https://canvas.uccs.edu/api/v1"
 HEADERS = {"Authorization": f"Bearer {CANVAS_API_TOKEN}"}
 
 
+def _get_next_link(link_header):
+    """Return the ``rel=next`` URL from a Canvas pagination header."""
+
+    if not link_header:
+        return None
+
+    for part in link_header.split(","):
+        section = part.strip()
+        if 'rel="next"' not in section:
+            continue
+
+        start = section.find("<")
+        end = section.find(">", start + 1)
+        if start != -1 and end != -1:
+            return section[start + 1 : end]
+
+    return None
+
+
 #retrieves all courses that the user is enrolled in
 def get_courses():
     '''Fetches all courses the user is enrolled in from Canvas API.'''
     print("Debug: Fetching courses")
     courses = []
     url = f"{CANVAS_BASE_URL}/courses"
+    params = {"per_page": 100}
 
     while url:
-        response = requests.get(url, headers=HEADERS)
+        request_kwargs = {"headers": HEADERS}
+        if params is not None and "?" not in url:
+            request_kwargs["params"] = params
+
+        response = requests.get(url, **request_kwargs)
         if response.status_code != 200:
             print(f"Error fetching courses: {response.status_code} - {response.text}")
             break
@@ -29,18 +53,11 @@ def get_courses():
         print(f"Debug: Fetched {len(batch)} courses")
         courses.extend(batch)
 
-        # Parse pagination link
-        links = response.headers.get("Link", "")
-        next_url = None
-        for link in links.split(","):
-            if 'rel="next"' in link:
-                next_url = link[link.find("<")+1:link.find(">")]
-                break
-
-        url = next_url
+        url = _get_next_link(response.headers.get("Link", ""))
+        params = None
 
     return courses
-    
+
 #Fetches all modules for a specific course
 def getCourseModules(course_id):
     """Fetches all modules for a specific course from Canvas API.
@@ -49,26 +66,61 @@ def getCourseModules(course_id):
     Returns:
         list: A list of URLs for items in the course modules.
     """
+    urls = []  # stores the urls of the items in the modules
     url = f"{CANVAS_BASE_URL}/courses/{course_id}/modules"
-    response = requests.get(url, headers=HEADERS)
-    if response.status_code == 200:
-        response = response.json()
-        items_urls = [module.get("items_url") for module in response]
-        urls = [] #stores the urls of the items in the modules
+    params = {"per_page": 100}
+
+    while url:
+        request_kwargs = {"headers": HEADERS}
+        if params is not None:
+            request_kwargs["params"] = params
+
+        response = requests.get(url, **request_kwargs)
+        if response.status_code != 200:
+            print(
+                f"Error fetching modules for course {course_id}: {response.status_code} - {response.text}"
+            )
+            break
+
+        payload = response.json()
+        items_urls = [module.get("items_url") for module in payload]
+
         for items_url in items_urls:
-            if items_url:
-                items_response = requests.get(items_url, headers=HEADERS)
-                if items_response.status_code == 200:
-                    items = items_response.json()
-                    for item in items:
-                        if "url" in item:
-                            urls.append(item["url"])
-                        if "external_url" in item:
-                            urls.append(item["external_url"])
+            if not items_url:
+                continue
 
+            item_url = items_url
+            item_params = {"per_page": 100}
 
-        print(f"Debug: Found {len(urls)} URLs in course {course_id}")
-        return urls
+            while item_url:
+                item_kwargs = {"headers": HEADERS}
+                if item_params is not None and "?" not in item_url:
+                    item_kwargs["params"] = item_params
+
+                items_response = requests.get(item_url, **item_kwargs)
+                if items_response.status_code != 200:
+                    print(
+                        f"Error fetching module items for course {course_id}: {items_response.status_code} - {items_response.text}"
+                    )
+                    break
+
+                items = items_response.json()
+                for item in items:
+                    link = item.get("url")
+                    external = item.get("external_url")
+                    if link:
+                        urls.append(link)
+                    if external:
+                        urls.append(external)
+
+                item_url = _get_next_link(items_response.headers.get("Link", ""))
+                item_params = None
+
+        url = _get_next_link(response.headers.get("Link", ""))
+        params = None
+
+    print(f"Debug: Found {len(urls)} URLs in course {course_id}")
+    return urls
     
 def sortUrls(urls):
     """
@@ -82,7 +134,7 @@ def sortUrls(urls):
     print("Debug: Sorting URLs")
     if not urls:
         print("Debug: No URLs to sort")
-        return {"youtube": [], "canvas": [], "other": []}
+        return {"youtube": [], "canvas": [], "panopto": [], "other": []}
 
     youtube = []
     canvas = []
