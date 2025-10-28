@@ -154,7 +154,16 @@ def main() -> None:
     prompt = _build_prompt(diff)
 
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel(model_name)
+
+    # Configure safety settings to allow code review content
+    safety_settings = [
+        {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+        {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+        {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+        {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
+    ]
+
+    model = genai.GenerativeModel(model_name, safety_settings=safety_settings)
 
     try:
         response = model.generate_content(
@@ -166,6 +175,14 @@ def main() -> None:
         )
     except Exception as exc:  # pragma: no cover - external API call
         raise SystemExit(f"Failed to generate AI review: {exc}")
+
+    # Check if response has valid content
+    if not response.candidates or not response.candidates[0].content.parts:
+        finish_reason = response.candidates[0].finish_reason if response.candidates else "UNKNOWN"
+        print(f"Warning: Gemini did not return valid content. Finish reason: {finish_reason}")
+        print("This may happen if the diff is too large or triggered safety filters.")
+        print("Skipping AI review for this change.")
+        return
 
     review_text = response.text.strip()
 

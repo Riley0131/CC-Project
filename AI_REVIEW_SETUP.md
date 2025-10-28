@@ -95,6 +95,7 @@ Available free Gemini models:
 - `gemini-1.5-flash` (recommended - balanced speed and quality)
 - `gemini-1.5-flash-8b` (fastest, lighter model)
 - `gemini-1.5-pro` (highest quality, but slower)
+- `gemini-2.0-flash-exp` (experimental next-gen model)
 
 ### Adjust Diff Size Limit
 
