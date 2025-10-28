@@ -1,44 +1,35 @@
-name: AI Code Review
+name: ai-review
 
 on:
-  push:
-    branches:
-      - '**'
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
 
-permissions:
-  contents: read
-  pull-requests: write
+env:
+  PYTHON_VERSION: "3.12"
+  PROJECT_DIR: Wanderly
 
 jobs:
   ai-review:
-    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-    env:
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      AI_REVIEW_MODEL: ${{ vars.AI_REVIEW_MODEL }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Skip AI review when API key is missing
-        if: env.OPENAI_API_KEY == ''
-        run: echo "::warning::OPENAI_API_KEY secret is not configured. Skipping AI review."
-
       - name: Set up Python
-        if: env.OPENAI_API_KEY != ''
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install AI review dependencies
-        if: env.OPENAI_API_KEY != ''
+      - name: Install OpenAI client
         run: |
           python -m pip install --upgrade pip
-          pip install openai==0.28.1
+          pip install openai requests
 
-      - name: Run AI code review
-        if: env.OPENAI_API_KEY != ''
-        run: python ci/ai_review.py
+      - name: Run AI pull-request review
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: |
+          python tools/ai_pr_review.py
