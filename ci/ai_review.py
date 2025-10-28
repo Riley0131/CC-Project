@@ -16,7 +16,7 @@ import textwrap
 from pathlib import Path
 
 try:
-    import openai  # type: ignore
+    from openai import OpenAI  # type: ignore
 except Exception as exc:  # pragma: no cover - defensive import guard
     raise SystemExit(f"Failed to import the OpenAI SDK: {exc}")
 
@@ -156,9 +156,9 @@ def main() -> None:
 
     messages = _build_prompt(diff)
 
-    openai.api_key = api_key
+    client = OpenAI(api_key=api_key)
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model=model,
             messages=messages,
             temperature=0.2,
@@ -167,7 +167,7 @@ def main() -> None:
     except Exception as exc:  # pragma: no cover - external API call
         raise SystemExit(f"Failed to generate AI review: {exc}")
 
-    review_text = response["choices"][0]["message"]["content"].strip()
+    review_text = response.choices[0].message.content.strip()
 
     print("AI Review Result:\n")
     print(review_text)
