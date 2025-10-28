@@ -1,4 +1,6 @@
 # Closed Captioning Audit
+Developed by Riley O'Shea for the University of Colorado Colorado Springs Assistive Technology Department
+Roshea@uccs.edu
 
 A toolkit for auditing Canvas courses to confirm that instructional videos provide accessible captioning. The project bundles a command-line workflow and a Tkinter GUI that automate pulling course content from the Canvas API, checking caption availability on supported video platforms, and writing consolidated results for accessibility reviewers.
 
