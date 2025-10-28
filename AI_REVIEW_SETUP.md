@@ -1,5 +1,7 @@
 # AI Code Review Setup Instructions
 
+Uses Gemini 2.5 flash
+
 This guide will help you set up the AI-powered code review workflow for your GitHub repository using Google's Gemini API (FREE tier).
 
 ## Overview
