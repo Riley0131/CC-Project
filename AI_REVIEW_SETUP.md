@@ -1,28 +1,33 @@
 # AI Code Review Setup Instructions
 
-This guide will help you set up the AI-powered code review workflow for your GitHub repository.
+This guide will help you set up the AI-powered code review workflow for your GitHub repository using Google's Gemini API (FREE tier).
 
 ## Overview
 
-The AI Code Review workflow automatically analyzes code changes using OpenAI's GPT models when:
+The AI Code Review workflow automatically analyzes code changes using Google's Gemini AI when:
 - A pull request is opened, synchronized, or reopened
 - Code is pushed to the `main` or `develop` branches
 
 ## Prerequisites
 
 - A GitHub repository with the workflow files in place
-- An OpenAI API account with API access
+- A Google account (Gmail account)
 - Repository admin access to configure secrets
 
 ## Manual Setup Steps
 
-### 1. Get Your OpenAI API Key
+### 1. Get Your Free Gemini API Key
 
-1. Go to [OpenAI Platform](https://platform.openai.com/)
-2. Sign in or create an account
-3. Navigate to **API Keys** section
-4. Click **Create new secret key**
-5. Copy the API key (you won't be able to see it again)
+1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey)
+2. Sign in with your Google account
+3. Click **Get API Key** or **Create API Key**
+4. Select **Create API key in new project** (or choose an existing project)
+5. Copy the API key (you can always retrieve it later from AI Studio)
+
+**Note**: The free tier includes:
+- 15 requests per minute
+- 1,500 requests per day
+- No credit card required!
 
 ### 2. Add the API Key to GitHub Secrets
 
@@ -31,8 +36,8 @@ The AI Code Review workflow automatically analyzes code changes using OpenAI's G
 3. In the left sidebar, navigate to **Secrets and variables** → **Actions**
 4. Click **New repository secret**
 5. Set the following:
-   - **Name**: `OPENAI_API_KEY`
-   - **Secret**: Paste your OpenAI API key
+   - **Name**: `GEMINI_API_KEY`
+   - **Secret**: Paste your Gemini API key
 6. Click **Add secret**
 
 ### 3. Configure Workflow Permissions (if needed)
@@ -78,13 +83,18 @@ To test if everything is working:
 
 ### Customize the AI Model
 
-By default, the workflow uses `gpt-4o-mini`. To use a different model:
+By default, the workflow uses `gemini-1.5-flash` (fastest and free). To use a different model:
 
-1. Go to **Settings** → **Secrets and variables** → **Actions**
-2. Click **New repository secret** or **New variable**
+1. Go to **Settings** → **Secrets and variables** → **Actions** → **Variables** tab
+2. Click **New repository variable**
 3. Add:
    - **Name**: `AI_REVIEW_MODEL`
-   - **Value**: Your preferred model (e.g., `gpt-4o`, `gpt-4-turbo`)
+   - **Value**: Your preferred model (e.g., `gemini-1.5-pro`, `gemini-1.5-flash-8b`)
+
+Available free Gemini models:
+- `gemini-1.5-flash` (recommended - balanced speed and quality)
+- `gemini-1.5-flash-8b` (fastest, lighter model)
+- `gemini-1.5-pro` (highest quality, but slower)
 
 ### Adjust Diff Size Limit
 
@@ -114,14 +124,16 @@ To change which branches trigger the review on push:
 - Verify the workflow is enabled in **Actions** tab
 - Ensure you're triggering the correct events (PR or push to specified branches)
 
-### "OPENAI_API_KEY is not set" error
-- Verify the secret name is exactly `OPENAI_API_KEY` (case-sensitive)
+### "GEMINI_API_KEY is not set" error
+- Verify the secret name is exactly `GEMINI_API_KEY` (case-sensitive)
 - Check that the secret is set in the repository (not organization or environment)
+- Ensure you created the API key in Google AI Studio
 
 ### API rate limit errors
-- Check your OpenAI account usage and billing
-- Consider using a different model or reducing review frequency
-- Add rate limiting or conditional execution to the workflow
+- Free tier allows 15 requests/minute and 1,500/day
+- If you hit limits, wait a few minutes or reduce review frequency
+- Consider adding conditional execution to only run on specific branches
+- Check your usage at [Google AI Studio](https://aistudio.google.com/)
 
 ### Permission errors
 - Enable workflow read/write permissions (see step 3 above)
@@ -133,10 +145,15 @@ To change which branches trigger the review on push:
 
 ## Cost Considerations
 
-- Each review consumes OpenAI API tokens
-- `gpt-4o-mini` is the most cost-effective option (~$0.15 per million input tokens)
-- Monitor your OpenAI usage dashboard regularly
-- Consider limiting the workflow to only pull requests if costs are a concern
+**Good news: This is completely FREE!** 🎉
+
+Google's Gemini API free tier includes:
+- 15 requests per minute
+- 1,500 requests per day
+- No credit card required
+- No charges for standard usage
+
+This is more than enough for most repositories. Even active projects with dozens of PRs per day will stay within the free limits.
 
 ## Next Steps
 
@@ -154,5 +171,15 @@ The review appears in:
 
 For issues or questions:
 - Check the [GitHub Actions documentation](https://docs.github.com/en/actions)
-- Review the [OpenAI API documentation](https://platform.openai.com/docs)
+- Review the [Google AI Gemini API documentation](https://ai.google.dev/docs)
+- Visit [Google AI Studio](https://aistudio.google.com/) to test your API key
 - Check workflow logs in the Actions tab for detailed error messages
+
+## Switching Back to OpenAI (Optional)
+
+If you later want to use OpenAI instead:
+1. Change `GEMINI_API_KEY` to `OPENAI_API_KEY` in workflow and script
+2. Replace `google-generativeai` with `openai` package
+3. Update the API calls in `ci/ai_review.py`
+
+Note: OpenAI requires billing setup and charges per request.

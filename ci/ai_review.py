@@ -3,9 +3,9 @@
 
 This script is designed to run inside a GitHub Actions workflow. It inspects the
 current event payload to determine the base and head commits, extracts the diff,
-and then asks an OpenAI chat model to provide a short review. The review is
-written to STDOUT and, when available, appended to ``GITHUB_STEP_SUMMARY`` so it
-appears in the workflow summary tab.
+and then asks Google Gemini to provide a short review. The review is written to
+STDOUT and, when available, appended to ``GITHUB_STEP_SUMMARY`` so it appears in
+the workflow summary tab.
 """
 from __future__ import annotations
 
@@ -16,9 +16,9 @@ import textwrap
 from pathlib import Path
 
 try:
-    from openai import OpenAI  # type: ignore
+    import google.generativeai as genai  # type: ignore
 except Exception as exc:  # pragma: no cover - defensive import guard
-    raise SystemExit(f"Failed to import the OpenAI SDK: {exc}")
+    raise SystemExit(f"Failed to import the Google Generative AI SDK: {exc}")
 
 
 def _run_git_command(*args: str) -> str:
@@ -104,8 +104,8 @@ def _collect_diff(base: str | None, head: str) -> str:
     return diff
 
 
-def _build_prompt(diff: str) -> list[dict[str, str]]:
-    """Construct the chat prompt for the OpenAI model."""
+def _build_prompt(diff: str) -> str:
+    """Construct the prompt for the AI model."""
     repo = os.environ.get("GITHUB_REPOSITORY", "this repository")
     event_name = os.environ.get("GITHUB_EVENT_NAME", "workflow run")
     instructions = textwrap.dedent(
@@ -121,11 +121,8 @@ def _build_prompt(diff: str) -> list[dict[str, str]]:
         """
     ).strip()
 
-    user_content = f"Here is the diff to review:\n\n```diff\n{diff}\n```"
-    return [
-        {"role": "system", "content": instructions},
-        {"role": "user", "content": user_content},
-    ]
+    prompt = f"{instructions}\n\nHere is the diff to review:\n\n```diff\n{diff}\n```"
+    return prompt
 
 
 def _write_summary(review: str) -> None:
@@ -141,11 +138,11 @@ def _write_summary(review: str) -> None:
 
 
 def main() -> None:
-    api_key = os.environ.get("OPENAI_API_KEY")
+    api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
-        raise SystemExit("OPENAI_API_KEY is not set; cannot run AI review.")
+        raise SystemExit("GEMINI_API_KEY is not set; cannot run AI review.")
 
-    model = os.environ.get("AI_REVIEW_MODEL", "gpt-4o-mini")
+    model_name = os.environ.get("AI_REVIEW_MODEL", "gemini-1.5-flash")
 
     payload = _load_event_payload()
     base, head = _determine_base_and_head(payload)
@@ -154,20 +151,23 @@ def main() -> None:
         print("No changes detected in the diff. Skipping AI review.")
         return
 
-    messages = _build_prompt(diff)
+    prompt = _build_prompt(diff)
 
-    client = OpenAI(api_key=api_key)
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel(model_name)
+
     try:
-        response = client.chat.completions.create(
-            model=model,
-            messages=messages,
-            temperature=0.2,
-            max_tokens=800,
+        response = model.generate_content(
+            prompt,
+            generation_config=genai.types.GenerationConfig(
+                temperature=0.2,
+                max_output_tokens=800,
+            ),
         )
     except Exception as exc:  # pragma: no cover - external API call
         raise SystemExit(f"Failed to generate AI review: {exc}")
 
-    review_text = response.choices[0].message.content.strip()
+    review_text = response.text.strip()
 
     print("AI Review Result:\n")
     print(review_text)
