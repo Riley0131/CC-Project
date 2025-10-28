@@ -142,7 +142,7 @@ def main() -> None:
     if not api_key:
         raise SystemExit("GEMINI_API_KEY is not set; cannot run AI review.")
 
-    model_name = os.environ.get("AI_REVIEW_MODEL", "gemini-1.5-flash")
+    model_name = os.environ.get("AI_REVIEW_MODEL", "gemini-2.5-flash")
 
     payload = _load_event_payload()
     base, head = _determine_base_and_head(payload)
