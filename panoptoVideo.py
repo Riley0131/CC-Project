@@ -71,12 +71,23 @@ def _append_result(entry: dict, file_path: str = "data/audited_videos.json") -> 
 
 
 def _normalize_panopto_url(url: str) -> str:
-    """Convert embed links to the viewer format to simplify Selenium automation."""
+    """Convert embed links to the viewer format to simplify Selenium automation.
+    Also strips the _panopto_video marker parameter used for classification."""
 
     try:
         parsed = urlparse(url)
     except Exception:
         return url
+
+    # Strip the _panopto_video marker parameter if present
+    if "_panopto_video=true" in (parsed.query or ""):
+        query_params = parse_qs(parsed.query)
+        # Remove the marker parameter
+        query_params.pop("_panopto_video", None)
+        # Rebuild query string
+        new_query = "&".join(f"{k}={v[0]}" if len(v) == 1 else "&".join(f"{k}={val}" for val in v)
+                             for k, v in query_params.items())
+        parsed = parsed._replace(query=new_query)
 
     path = parsed.path or ""
     fragment = (parsed.fragment or "").lower()
@@ -87,7 +98,7 @@ def _normalize_panopto_url(url: str) -> str:
         parsed = parsed._replace(path=updated_path)
         return urlunparse(parsed)
 
-    return url
+    return urlunparse(parsed)
 
 
 def _extract_session_id(url: str) -> Optional[str]:
@@ -117,6 +128,10 @@ def _is_panopto_player_url(url: str) -> bool:
         parsed = urlparse(url)
     except Exception:
         return False
+
+    # Check for sessionless_launch URLs marked as Panopto
+    if "_panopto_video=true" in (parsed.query or ""):
+        return True
 
     netloc = (parsed.netloc or "").lower()
     path = (parsed.path or "").lower()

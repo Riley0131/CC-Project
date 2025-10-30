@@ -108,9 +108,69 @@ def getCourseModules(course_id):
                 for item in items:
                     link = item.get("url")
                     external = item.get("external_url")
-                    if link:
+                    item_type = item.get("type")
+                    is_panopto_external_tool = False
+
+                    # Check if this is an external tool (potentially Panopto)
+                    if link and item_type == "ExternalTool":
+                        try:
+                            # Check if the item itself contains Panopto information
+                            item_title = item.get("title", "").lower()
+                            item_external_url = item.get("external_url", "").lower()
+
+                            # Check if this is a Panopto tool based on item metadata
+                            is_panopto = "panopto" in item_title or "panopto" in item_external_url
+
+                            # Make an additional API call to the Canvas module item URL
+                            link_response = requests.get(link, headers=HEADERS)
+                            if link_response.status_code == 200:
+                                link_data = link_response.json()
+                                print(f"Debug: API response for {link}: {link_data}")
+
+                                # Check if this is a Panopto external tool
+                                external_tool_url = link_data.get("external_url", "")
+
+                                # Also check the response for Panopto indicators
+                                if not is_panopto:
+                                    is_panopto = "panopto" in external_tool_url.lower()
+
+                                # Look for sessionless_launch URL
+                                sessionless_url = link_data.get("url")
+
+                                # If it's Panopto, use the sessionless_launch URL for Selenium testing
+                                if is_panopto:
+                                    is_panopto_external_tool = True
+                                    if sessionless_url:
+                                        # Mark this as a Panopto URL by adding a marker parameter
+                                        marked_url = sessionless_url + "&_panopto_video=true"
+                                        urls.append(marked_url)
+                                        print(f"Debug: Found Panopto sessionless_launch URL: {marked_url}")
+                                    else:
+                                        # Fallback to external_url if available
+                                        if external_tool_url:
+                                            urls.append(external_tool_url)
+                                            print(f"Debug: Using Panopto external_url: {external_tool_url}")
+                                        else:
+                                            urls.append(link)
+                                else:
+                                    # Not Panopto, add the direct URL if available
+                                    direct_url = link_data.get("url", link)
+                                    urls.append(direct_url)
+                            else:
+                                # Fallback to original link if API call fails
+                                urls.append(link)
+                        except Exception as e:
+                            print(f"Error following Canvas API for external tool {link}: {e}")
+                            # Fallback to original link
+                            urls.append(link)
+                    elif link and "panopto" in link.lower():
+                        # Direct Panopto link
                         urls.append(link)
-                    if external:
+                    elif link:
+                        urls.append(link)
+
+                    # Skip adding external_url for Panopto external tools (we already added the sessionless_launch URL)
+                    if external and not is_panopto_external_tool:
                         urls.append(external)
 
                 item_url = _get_next_link(items_response.headers.get("Link", ""))
@@ -152,7 +212,7 @@ def sortUrls(urls):
         if "youtu" in lower:
             print(f"Debug: Found YouTube URL: {u}")
             youtube.append(u)
-        elif "panopto" in lower:
+        elif "panopto" in lower or "_panopto_video=true" in lower:
             print(f"Debug: Found Panopto URL: {u}")
             panopto.append(u)
         elif ("canvas" in lower) and ("files" in lower):
