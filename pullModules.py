@@ -108,8 +108,32 @@ def getCourseModules(course_id):
                 for item in items:
                     link = item.get("url")
                     external = item.get("external_url")
-                    if link:
+
+                    # For Panopto videos, follow the Canvas API url field to get the direct link
+                    if link and "panopto" in link.lower():
+                        try:
+                            # Make an additional API call to the Canvas module item URL
+                            link_response = requests.get(link, headers=HEADERS)
+                            if link_response.status_code == 200:
+                                link_data = link_response.json()
+                                # Extract the url field from the response
+                                direct_url = link_data.get("url")
+                                if direct_url:
+                                    urls.append(direct_url)
+                                    print(f"Debug: Followed Canvas API for Panopto link: {direct_url}")
+                                else:
+                                    # Fallback to original link if no url field found
+                                    urls.append(link)
+                            else:
+                                # Fallback to original link if API call fails
+                                urls.append(link)
+                        except Exception as e:
+                            print(f"Error following Canvas API for link {link}: {e}")
+                            # Fallback to original link
+                            urls.append(link)
+                    elif link:
                         urls.append(link)
+
                     if external:
                         urls.append(external)
 

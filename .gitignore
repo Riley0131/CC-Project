@@ -5,3 +5,4 @@ config/canvasAPI.py
 config/__pycache__
 *.pyc
 /config/__pycache__
+/.claude
